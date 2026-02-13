@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kavya ❤️</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            font-family: 'Comic Sans MS', cursive;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 40px;
+            color: white;
+            text-align: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 22px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+        }
+
+        #yesBtn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #noBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Floating hearts */
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 24px;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-110vh); opacity: 0; }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kavya 💖<br>Will You Be My Valentine? 💕</h1>
+
+    <div class="buttons">
+        <button id="yesBtn">Yes 💖</button>
+        <button id="noBtn">No 😢</button>
+    </div>
+
+    <canvas id="confettiCanvas"></canvas>
+
+    <script>
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const canvas = document.getElementById("confettiCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let size = 1;
+        let confettiPieces = [];
+
+        // Floating hearts
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "💖";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = Math.random() * 20 + 20 + "px";
+            heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+
+        setInterval(createHeart, 300);
+
+        // NO button effect
+        noBtn.addEventListener("click", function() {
+            size += 0.4;
+            yesBtn.style.transform = "scale(" + size + ")";
+
+            if (size > 6) {
+                yesBtn.style.position = "fixed";
+                yesBtn.style.top = "0";
+                yesBtn.style.left = "0";
+                yesBtn.style.width = "100vw";
+                yesBtn.style.height = "100vh";
+                yesBtn.style.fontSize = "50px";
+                yesBtn.innerHTML = "Kavya You Have To Say Yes 😘";
+            }
+        });
+
+        // YES button celebration
+        yesBtn.addEventListener("click", function() {
+
+            document.body.innerHTML = `
+                <h1 style="color:white; text-align:center; margin-top:35vh;">
+                    Thanks A Lot Kavya 💖<br><br>
+                    I LOVE YOU SOO SOO SOO MUCHHH ❤️❤️❤️
+                </h1>
+                <canvas id="confettiCanvas"></canvas>
+            `;
+
+            const newCanvas = document.getElementById("confettiCanvas");
+            newCanvas.width = window.innerWidth;
+            newCanvas.height = window.innerHeight;
+            const newCtx = newCanvas.getContext("2d");
+
+            for (let i = 0; i < 300; i++) {
+                confettiPieces.push({
+                    x: Math.random() * newCanvas.width,
+                    y: Math.random() * newCanvas.height - newCanvas.height,
+                    size: Math.random() * 8 + 4,
+                    speed: Math.random() * 3 + 2,
+                    color: `hsl(${Math.random() * 360},100%,50%)`
+                });
+            }
+
+            function animate() {
+                newCtx.clearRect(0, 0, newCanvas.width, newCanvas.height);
+
+                confettiPieces.forEach((p, index) => {
+                    p.y += p.speed;
+                    newCtx.fillStyle = p.color;
+                    newCtx.fillRect(p.x, p.y, p.size, p.size);
+
+                    if (p.y > newCanvas.height) {
+                        confettiPieces.splice(index, 1);
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        });
+    </script>
+
+</body>
+</html>
